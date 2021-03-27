@@ -1,13 +1,18 @@
-use std::time;
+use std::{env::var, time};
 
 use futures::stream::StreamExt;
 use mongodb::{bson::Document, Cursor};
 
+const MGO_USER: String = var("MGO_USER").unwrap();
+const MGO_PASSWORD: String = var("MGO_PASSWORD").unwrap();
+
 pub async fn client() -> mongodb::Client {
-    let mut client_options =
-        mongodb::options::ClientOptions::parse("mongodb://root:pillarQwe.123@localhost:5701")
-            .await
-            .unwrap();
+    let mut client_options = mongodb::options::ClientOptions::parse(&format!(
+        "mongodb://{}:{}@localhost:5701",
+        MGO_USER, MGO_PASSWORD
+    ))
+    .await
+    .unwrap();
 
     client_options.max_idle_time = Some(time::Duration::new(1, 0));
 

@@ -36,35 +36,51 @@ pub async fn add(mut _req: tide::Request<AppState>) -> tide::Result {
     Ok(json!(res.inserted_id).into())
 }
 
-pub async fn del(mut _req: tide::Request<AppState>) -> tide::Result {
-    let coll = get_user_coll(&_req.state().mongo_client);
-    let res = coll.delete_many(doc! {}, None).await?;
+pub async fn update(mut _req: tide::Request<AppState>) -> tide::Result {
+    let body: Document = _req.body_json().await?;
 
-    Ok(json!({"type":"user delete many", "count": res.deleted_count }).into())
+    let coll = get_user_coll(&_req.state().mongo_client);
+
+    let res = coll
+        .update_many(
+            doc! {"age":body.get_i32("age")?},
+            doc! {"name":body.get_str("name")?},
+            None,
+        )
+        .await?;
+
+    Ok(json!(res.upserted_id).into())
 }
 
 pub async fn find(mut _req: tide::Request<AppState>) -> tide::Result {
-    let query: Animal = _req.body_json().await?;
+    let body: Animal = _req.body_json().await?;
     let coll = get_user_coll(&_req.state().mongo_client);
 
     let mut fo = FindOptions::default();
     fo.sort = Some(doc! {"age":1});
     fo.limit = Some(5);
 
-    let data = mgo::find_to_list(coll.find(doc! {"name":query.name}, fo).await?).await;
+    let data = mgo::find_to_list(coll.find(doc! {"name":body.name}, fo).await?).await;
 
     Ok(json!({"count": data.len(), "data": data}).into())
 }
 
 pub async fn find_by_document(mut _req: tide::Request<AppState>) -> tide::Result {
-    let query: Document = _req.body_json().await?;
+    let body: Document = _req.body_json().await?;
     let coll = get_user_coll(&_req.state().mongo_client);
 
     let mut fo = FindOptions::default();
     fo.sort = Some(doc! {"age":1});
     fo.limit = Some(5);
 
-    let data = mgo::find_to_list(coll.find(doc! {"name":query.get_str("name")?}, fo).await?).await;
+    let data = mgo::find_to_list(coll.find(doc! {"name":body.get_str("name")?}, fo).await?).await;
 
     Ok(json!({"count": data.len(), "data": data}).into())
+}
+
+pub async fn del(mut _req: tide::Request<AppState>) -> tide::Result {
+    let coll = get_user_coll(&_req.state().mongo_client);
+    let res = coll.delete_many(doc! {}, None).await?;
+
+    Ok(json!({"type":"user delete many", "count": res.deleted_count }).into())
 }

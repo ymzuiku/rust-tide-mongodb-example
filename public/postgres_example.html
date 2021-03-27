@@ -9,7 +9,7 @@
     <script src="query.js"></script>
   </head>
   <body>
-    <h1>Mongo Example</h1>
+    <h1>Postgres Example</h1>
     <div>
       <h2>info</h2>
       <p id="info"></p>
@@ -18,11 +18,6 @@
     <div>
       <h2>add</h2>
       <p id="add"></p>
-    </div>
-
-    <div>
-      <h2>update</h2>
-      <p id="update"></p>
     </div>
 
     <div>
@@ -43,37 +38,28 @@
 
     <script>
       query({
-        url: "/mongo_example/info",
+        url: "/pg_example/info",
         body: {},
       });
 
       query({
-        url: "/mongo_example/add",
-        body: { name: "dog", age: Date.now() % 3, careate_at: Date.now() },
+        url: "/pg_example/add",
+        body: { name: "dog", age: Date.now(), careate_at: Date.now() },
       });
 
       query({
-        url: "/mongo_example/update",
-        body: {
-          name: "next-fish",
-          age: Date.now() % 3,
-          careate_at: Date.now(),
-        },
+        url: "/pg_example/find",
+        body: { name: "dog", age: Date.now(), create_at: Date.now() },
       });
 
       query({
-        url: "/mongo_example/find",
-        body: { name: "dog", age: Date.now() % 3, create_at: Date.now() },
-      });
-
-      query({
-        url: "/mongo_example/find_by_document",
-        body: { name: "dog", age: Date.now() % 3, create_at: Date.now() },
+        url: "/pg_example/update",
+        body: { name: "next-fish", age: Date.now(), create_at: Date.now() },
       });
 
       function deleteAll() {
         query({
-          url: "/mongo_example/del",
+          url: "/pg_example/del",
         });
       }
     </script>

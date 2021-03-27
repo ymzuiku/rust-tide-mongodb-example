@@ -3,6 +3,7 @@ use crate::AppState;
 mod restful_example;
 // mod pg_user;
 mod mongo_example;
+mod postgres_example;
 
 pub fn register_apis(app: &mut tide::Server<AppState>) {
     // examples
@@ -27,7 +28,14 @@ pub fn register_apis(app: &mut tide::Server<AppState>) {
     app.at("/mongo_example/info").post(mongo_example::info);
     app.at("/mongo_example/add").post(mongo_example::add);
     app.at("/mongo_example/del").post(mongo_example::del);
+    app.at("/mongo_example/del").post(mongo_example::update);
     app.at("/mongo_example/find").post(mongo_example::find);
     app.at("/mongo_example/find_by_document")
         .post(mongo_example::find_by_document);
+
+    app.at("/pg_example/info").post(postgres_example::info);
+    app.at("/pg_example/add").post(postgres_example::add);
+    app.at("/pg_example/find").post(postgres_example::find);
+    app.at("/pg_example/update").post(postgres_example::update);
+    app.at("/pg_example/del").post(postgres_example::del);
 }
