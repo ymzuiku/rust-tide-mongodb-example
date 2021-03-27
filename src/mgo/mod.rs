@@ -22,7 +22,9 @@ pub async fn find_to_list(mut cursor: Cursor<Document>) -> Vec<Document> {
     while let Some(item) = cursor.next().await {
         match item {
             Ok(v) => data.push(v),
-            Err(_) => {}
+            Err(e) => {
+                println!("find_to_list error: {}", e);
+            }
         }
     }
     return data;

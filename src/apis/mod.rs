@@ -28,4 +28,6 @@ pub fn register_apis(app: &mut tide::Server<AppState>) {
     app.at("/mongo_example/add").post(mongo_example::add);
     app.at("/mongo_example/del").post(mongo_example::del);
     app.at("/mongo_example/find").post(mongo_example::find);
+    app.at("/mongo_example/find_by_document")
+        .post(mongo_example::find_by_document);
 }

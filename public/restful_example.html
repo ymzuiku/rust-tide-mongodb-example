@@ -48,115 +48,66 @@
     </div>
 
     <script>
-      fetch("/restful_example/post_error", {
-        method: "POST",
-        body: JSON.stringify({ ignoreName: "other" }),
-      })
-        .then((v) => v.json())
-        .then((res) => {
-          const ele = document.getElementById("post_error");
-          ele.style.border = "1px solid #000";
-          ele.textContent = JSON.stringify(res);
+      function query({ url = "", method, body }) {
+        const list = url.split("/");
+        let id = list[list.length - 1];
+        id = id.split("?")[0];
+
+        fetch(url, {
+          method: method || "POST",
+          body: body ? JSON.stringify(body) : void 0,
         })
-        .catch((err) => {
-          const ele = document.getElementById("post_error");
-          ele.style.border = "1px solid #000";
-          ele.textContent = err.toString();
-        });
+          .then((v) => v.json())
+          .then((res) => {
+            const ele = document.getElementById(id);
+            ele.textContent = JSON.stringify(res);
+          })
+          .catch((err) => {
+            const ele = document.getElementById(id);
+            ele.textContent = err.toString();
+            ele.style.border = "1px solid #333";
+          });
+      }
+    </script>
 
-      fetch("/restful_example/post_get_error", {
-        method: "POST",
-        body: JSON.stringify({ ignoreName: "other" }),
-      })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById(
-            "post_get_error"
-          ).textContent = JSON.stringify(res);
-        })
-        .catch((err) => {
-          const ele = document.getElementById("post_get_error");
-          ele.style.border = "1px solid #000";
-          ele.textContent = err.toString();
-        });
+    <script>
+      query({
+        url: "/restful_example/post_error",
+        body: { ignoreName: "other" },
+      });
 
-      fetch("/restful_example/post_unwrap", {
-        method: "POST",
-        body: JSON.stringify({ ignoreName: "other" }),
-      })
-        .then((v) => v.json())
-        .then((res) => {
-          const ele = document.getElementById("post_unwrap");
-          ele.style.border = "1px solid #000";
-          ele.textContent = JSON.stringify(res);
-        })
-        .catch((err) => {
-          const ele = document.getElementById("post_unwrap");
-          ele.style.border = "1px solid #000";
-          ele.textContent = err.toString();
-        });
+      query({
+        url: "/restful_example/post_get_error",
+        body: { ignoreName: "other" },
+      });
 
-      fetch("/restful_example/post_panic", {
-        method: "POST",
-        body: JSON.stringify({ ignoreName: "other" }),
-      })
-        .then((v) => v.text())
-        .then((res) => {
-          document.getElementById("post_panic").textContent = JSON.stringify(
-            res
-          );
-        })
-        .catch((err) => {
-          const ele = document.getElementById("post_panic");
-          ele.style.border = "1px solid #000";
-          ele.textContent = err.toString();
-        });
+      query({
+        url: "/restful_example/post_unwrap",
+      });
 
-      fetch("/restful_example/get_query?name=banana&age=1", { method: "GET" })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById("get_query").textContent = JSON.stringify(
-            res
-          );
-        });
+      query({
+        url: "/restful_example/post_panic",
+      });
 
-      fetch("/restful_example/get_params/fish/5", { method: "GET" })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById("get_params").textContent = JSON.stringify(
-            res
-          );
-        });
+      query({
+        url: "/restful_example/get_query?name=banana&age=1",
+        method: "GET",
+      });
 
-      fetch("/restful_example/get_params/fish/5", { method: "GET" })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById("get_params").textContent = JSON.stringify(
-            res
-          );
-        });
+      query({
+        url: "/restful_example/get_params/fish/5",
+        method: "GET",
+      });
 
-      fetch("/restful_example/post_body", {
-        method: "POST",
-        body: JSON.stringify({ name: "dog", age: 20 }),
-      })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById("post_body").textContent = JSON.stringify(
-            res
-          );
-        });
+      query({
+        url: "/restful_example/post_body",
+        body: { name: "dog", age: 20 },
+      });
 
-      fetch("/restful_example/post_body_doc", {
-        method: "POST",
-        body: JSON.stringify({ name: "dog-doc", age: 30 }),
-      })
-        .then((v) => v.json())
-        .then((res) => {
-          document.getElementById("post_body_doc").textContent = JSON.stringify(
-            res
-          );
-        });
+      query({
+        url: "/restful_example/post_body_doc",
+        body: { name: "dog-dog", age: 30 },
+      });
     </script>
   </body>
 </html>

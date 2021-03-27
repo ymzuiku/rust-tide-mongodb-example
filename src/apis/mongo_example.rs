@@ -1,6 +1,6 @@
 use mongodb::{
     bson::{doc, Document},
-    options::FindOptions,
+    options::{self, FindOptions},
     Client, Collection,
 };
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,7 @@ pub async fn info(mut _res: tide::Request<AppState>) -> tide::Result {
 #[derive(Debug, Serialize, Deserialize)]
 struct Animal {
     name: String,
-    age: i32,
+    age: i64,
 }
 
 fn get_user_coll(client: &Client) -> Collection<Document> {
@@ -43,23 +43,28 @@ pub async fn del(mut _req: tide::Request<AppState>) -> tide::Result {
     Ok(json!({"type":"user delete many", "count": res.deleted_count }).into())
 }
 
-#[derive(Debug, Deserialize)]
-struct Query {
-    data: Document,
-}
-
 pub async fn find(mut _req: tide::Request<AppState>) -> tide::Result {
-    let query: Query = _req.query()?;
+    let query: Animal = _req.body_json().await?;
     let coll = get_user_coll(&_req.state().mongo_client);
-
-    println!("{:?}", query);
-    println!("{:?}", doc! {"bbb":"ccc"});
 
     let mut fo = FindOptions::default();
     fo.sort = Some(doc! {"age":1});
     fo.limit = Some(5);
 
-    let data = mgo::find_to_list(coll.find(doc! {"name":"dog"}, fo).await?).await;
+    let data = mgo::find_to_list(coll.find(doc! {"name":query.name}, fo).await?).await;
 
-    Ok(json!({"data": data, "count": data.len()}).into())
+    Ok(json!({"count": data.len(), "data": data}).into())
+}
+
+pub async fn find_by_document(mut _req: tide::Request<AppState>) -> tide::Result {
+    let query: Document = _req.body_json().await?;
+    let coll = get_user_coll(&_req.state().mongo_client);
+
+    let mut fo = FindOptions::default();
+    fo.sort = Some(doc! {"age":1});
+    fo.limit = Some(5);
+
+    let data = mgo::find_to_list(coll.find(doc! {"name":query.get_str("name")?}, fo).await?).await;
+
+    Ok(json!({"count": data.len(), "data": data}).into())
 }

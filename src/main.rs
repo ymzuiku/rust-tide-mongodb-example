@@ -1,5 +1,4 @@
-use serde_json::json;
-use tide::{utils::After, Server};
+use tide::Server;
 mod mgo;
 
 mod apis;
@@ -33,13 +32,13 @@ async fn make_app() -> tide::Result<Server<AppState>> {
     Ok(app)
 }
 
-async fn after_error(mut res: tide::Response) -> tide::Result<tide::Response> {
-    if res.is_empty().unwrap_or(true) {
-        res.set_body(json!({"error":"get value error"}).to_string());
-    }
+// async fn after_error(mut res: tide::Response) -> tide::Result<tide::Response> {
+//     if res.is_empty().unwrap_or(true) {
+//         res.set_body(json!({"error":"get value error"}).to_string());
+//     }
 
-    Ok(res)
-}
+//     Ok(res)
+// }
 
 async fn static_index(_req: tide::Request<AppState>) -> tide::Result {
     let mut res = tide::Response::new(tide::StatusCode::Ok);
