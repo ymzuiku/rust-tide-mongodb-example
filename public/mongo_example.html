@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Mongo Example</h1>
+    <div>
+      <h2>info</h2>
+      <p id="info"></p>
+    </div>
+
+    <div>
+      <h2>add</h2>
+      <p id="add"></p>
+    </div>
+
+    <div>
+      <h2>find</h2>
+      <p id="find"></p>
+    </div>
+
+    <div>
+      <h2>del</h2>
+      <p id="del"></p>
+    </div>
+
+    <script>
+      fetch("/mongo_example/info", {
+        method: "POST",
+      })
+        .then((v) => v.json())
+        .then((res) => {
+          const ele = document.getElementById("info");
+          ele.textContent = JSON.stringify(res);
+        })
+        .catch((err) => {
+          const ele = document.getElementById("info");
+          ele.textContent = JSON.stringify(res);
+          ele.style.border = "1px solid #333";
+        });
+
+      fetch("/mongo_example/add", {
+        method: "POST",
+        body: JSON.stringify({ name: "dog", age: 15 }),
+      })
+        .then((v) => v.json())
+        .then((res) => {
+          const ele = document.getElementById("add");
+          ele.textContent = JSON.stringify(res);
+        })
+        .catch((err) => {
+          const ele = document.getElementById("add");
+          ele.textContent = JSON.stringify(res);
+          ele.style.border = "1px solid #333";
+        });
+
+      fetch("/mongo_example/find", {
+        method: "POST",
+        body: JSON.stringify({ name: "dog", data: { hello: "bbb", age: 20 } }),
+      })
+        .then((v) => v.json())
+        .then((res) => {
+          const ele = document.getElementById("find");
+          ele.textContent = JSON.stringify(res);
+        })
+        .catch((err) => {
+          const ele = document.getElementById("find");
+          ele.textContent = JSON.stringify(res);
+          ele.style.border = "1px solid #333";
+        });
+
+      // setTimeout(() => {
+      //   fetch("/mongo_example/del", {
+      //     method: "POST",
+      //     body: JSON.stringify({ ignoreName: "other" }),
+      //   })
+      //     .then((v) => v.json())
+      //     .then((res) => {
+      //       const ele = document.getElementById("del");
+      //       ele.textContent = JSON.stringify(res);
+      //     })
+      //     .catch((err) => {
+      //       const ele = document.getElementById("del");
+      //       ele.textContent = JSON.stringify(res);
+      //       ele.style.border = "1px solid #333";
+      //     });
+      // }, 1000);
+    </script>
+  </body>
+</html>
