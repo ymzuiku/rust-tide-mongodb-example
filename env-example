@@ -1,0 +1,5 @@
+{
+  "pg_url":"postgres://postgres:123@127.0.0.1:5432/test",
+  "mgo_user":"root",
+  "mgo_password":"123"
+}

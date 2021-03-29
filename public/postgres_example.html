@@ -11,7 +11,11 @@
   <body>
     <h1>Postgres Example</h1>
     <div>
-      <h2>info</h2>
+      <h2>create_table</h2>
+      <p id="info"></p>
+    </div>
+    <div>
+      <h2>table_info</h2>
       <p id="info"></p>
     </div>
 
@@ -26,11 +30,6 @@
     </div>
 
     <div>
-      <h2>find_by_document</h2>
-      <p id="find_by_document"></p>
-    </div>
-
-    <div>
       <h2>del</h2>
       <button onclick="deleteAll()">run delete all</button>
       <p id="del"></p>
@@ -38,23 +37,28 @@
 
     <script>
       query({
-        url: "/pg_example/info",
+        url: "/pg_example/create_table",
+        body: {},
+      });
+
+      query({
+        url: "/pg_example/table_info",
         body: {},
       });
 
       query({
         url: "/pg_example/add",
-        body: { name: "dog", age: Date.now(), careate_at: Date.now() },
+        body: { name: "dog", age: Date.now() % 3, careate_at: Date.now() },
       });
 
       query({
         url: "/pg_example/find",
-        body: { name: "dog", age: Date.now(), create_at: Date.now() },
+        body: { name: "dog", age: Date.now() % 3, create_at: Date.now() },
       });
 
       query({
         url: "/pg_example/update",
-        body: { name: "next-fish", age: Date.now(), create_at: Date.now() },
+        body: { name: "next-fish", age: 2, create_at: Date.now() },
       });
 
       function deleteAll() {

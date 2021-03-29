@@ -1,11 +1,14 @@
+use sqlx::{Pool, Postgres};
 use tide::Server;
-mod mgo;
-
 mod apis;
+mod env_json;
+mod mgo;
+mod pg;
 
 #[derive(Debug, Clone)]
 pub struct AppState {
     pub mongo_client: mongodb::Client,
+    pub pg_pool: Pool<Postgres>,
 }
 
 #[async_std::main]
@@ -26,8 +29,12 @@ async fn main() -> tide::Result<()> {
 }
 
 async fn make_app() -> tide::Result<Server<AppState>> {
-    let mongo_client = mgo::client().await;
-    let app = Server::with_state(AppState { mongo_client });
+    let mongo_client = mgo::client().await?;
+    let pg_pool = pg::make_pool().await?;
+    let app = Server::with_state(AppState {
+        mongo_client,
+        pg_pool,
+    });
 
     Ok(app)
 }

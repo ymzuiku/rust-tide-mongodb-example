@@ -41,15 +41,13 @@ pub async fn update(mut _req: tide::Request<AppState>) -> tide::Result {
 
     let coll = get_user_coll(&_req.state().mongo_client);
 
+    let opt = options::UpdateModifications::Document(doc! {"$set":{"name":body.get_str("name")?}});
+
     let res = coll
-        .update_many(
-            doc! {"age":body.get_i32("age")?},
-            doc! {"name":body.get_str("name")?},
-            None,
-        )
+        .update_many(doc! {"age":{"$eq":body.get_i32("age")?}}, opt, None)
         .await?;
 
-    Ok(json!(res.upserted_id).into())
+    Ok(json!(res.modified_count).into())
 }
 
 pub async fn find(mut _req: tide::Request<AppState>) -> tide::Result {
