@@ -1,4 +1,4 @@
-# rust-tide-mongodb-postgres-example
+# rust-tide-mongodb-example
 
 ## feature
 
