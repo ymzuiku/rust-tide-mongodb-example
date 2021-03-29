@@ -1,19 +1,12 @@
 use crate::AppState;
-use serde_json::{json, Value};
-use sqlx::query_scalar;
+use serde_json::json;
 
 pub async fn create_table(mut _req: tide::Request<AppState>) -> tide::Result {
-    let pool = &_req.state().pg_pool;
-    let rows: Value = query_scalar("select * from user").fetch_one(pool).await?;
-
-    Ok(rows.into())
+    Ok("create-table".into())
 }
 
 pub async fn table_info(mut _req: tide::Request<AppState>) -> tide::Result {
-    let pool = &_req.state().pg_pool;
-    let rows: Value = query_scalar("select * from user").fetch_one(pool).await?;
-
-    Ok(rows.into())
+    Ok("table_info".into())
 }
 
 pub async fn add(mut _req: tide::Request<AppState>) -> tide::Result {
